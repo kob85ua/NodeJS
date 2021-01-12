@@ -1,0 +1,33 @@
+{
+  "name": "01-node-basics",
+  "version": "1.0.0",
+  "description": "01-node-basics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+    "nodemonConfig": {
+      "ignore": ["db/*"]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kob85ua/01-node-basics.git"
+  },
+  "keywords": [
+    "01-node-basics"
+  ],
+  "author": "M. Kobeliev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kob85ua/01-node-basics/issues"
+  },
+  "homepage": "https://github.com/kob85ua/01-node-basics#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "yargs": "^16.2.0"
+  }
+}
