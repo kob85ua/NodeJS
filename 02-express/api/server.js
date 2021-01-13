@@ -3,12 +3,20 @@ const morgan = require('morgan');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const contactRouter = require('./routers/contact.router')
-require('dotenv').config()
+
+const contactRouter = require('./routers/contact.router');
+
+require('dotenv').config();
+
 const PORT = process.env.PORT || 3000;
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
-  flags: 'a',
-});
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'),
+  {
+    flags: 'a',
+  },
+);
+
 module.exports = class ContactsServer {
   constructor() {
     this.server = null;
@@ -30,12 +38,14 @@ module.exports = class ContactsServer {
     this.server.use(cors({ origin: 'http://localhost:3000' }));
     this.server.use(morgan('combined', { stream: accessLogStream }));
   }
-    initRoutes() {
-      this.server.use('/api/contacts', contactRouter);
+
+  initRoutes() {
+    this.server.use('/api/contacts', contactRouter);
   }
-    startListening() {
-        this.server.listen(PORT, () => {
-          console.log('Started listening on port', PORT)
-      })
+
+  startListening() {
+    this.server.listen(PORT, () => {
+      console.log('Started listening on port', PORT);
+    });
   }
-}
+};

@@ -18,6 +18,7 @@ async function listContacts() {
       return JSON.parse(results);
     })
     .catch(error => console.log(error));
+  
   return list;
 }
 
@@ -31,6 +32,7 @@ async function getById(contactId) {
       return contactById;
     })
     .catch(error => console.log(error));
+  
   return contact;
 }
 
@@ -49,6 +51,7 @@ async function removeContact(contactId) {
     message: { message: 'contact deleted' },
     status: 200,
   };
+
   return result;
 }
 
@@ -67,8 +70,10 @@ async function addContact(newContact) {
       return data;
     })
     .catch(error => console.log(error));
+  
   return updatedList;
 }
+
 async function updateContact(contactId, newData) {
   const contactsList = await listContacts();
   const contactToUpdate = contactsList.find(
@@ -82,14 +87,16 @@ async function updateContact(contactId, newData) {
     };
     return result;
   }
-  const updatedContact = { ...contactToUpdate, ...newData }
-  const updatedList = contactsList.map((contact) => {
+
+  const updatedContact = { ...contactToUpdate, ...newData };
+  const updatedList = contactsList.map(contact => {
     if (contact.id === updatedContact.id) {
-      contact = updatedContact
-      return contact
+      contact = updatedContact;
+      return contact;
     }
-    return contact
-  })
+    return contact;
+  });
+
   await writeJson(updatedList);
   const updatedContactsListFromDb = await listContacts();
   const updatedContactFromDb = updatedContactsListFromDb.find(
@@ -99,9 +106,10 @@ async function updateContact(contactId, newData) {
     message: { ...updatedContactFromDb },
     status: 200,
   };
-  return result;
   
+  return result;
 }
+
 module.exports = {
   listContacts,
   getById,
