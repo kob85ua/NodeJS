@@ -2,8 +2,6 @@ const { Router } = require('express');
 
 const ContactController = require('./contact.controller');
 
-// const Contact = require('./Contact');
-
 const contactRouter = Router();
 
 contactRouter.get('/', ContactController.getContacts);
