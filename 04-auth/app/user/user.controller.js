@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('./User');
 
+
 module.exports = class UserController {
   static async registerUser(req, res) {
     try {
@@ -17,11 +18,21 @@ module.exports = class UserController {
         ...req.body,
         password: hash,
       });
+      
+      const { _id } = userToCreate;
+      const tokenToDb =  jwt.sign({ _id }, process.env.JWT_SECRET);
 
-      const { email, subscription } = userToCreate;
+      const userWithTokenInDb = await User.findByIdAndUpdate(
+        _id,
+        { $set: { token: tokenToDb } },
+        {
+          new: true,
+        },
+      );
+      const { email, subscription, token } = userWithTokenInDb;
 
       return res.status(201).json({
-        user: { email, subscription },
+        user: { email, subscription, token },
       });
     } catch (error) {
       if (!error.keyPattern) {
@@ -51,19 +62,26 @@ module.exports = class UserController {
     if (!result) {
       return res.status(401).send('Email or password is wrong');
     }
+    const { _id } = userToLogin;
 
-    const token = await jwt.sign(
-      { userId: userToLogin._id },
-      process.env.JWT_SECRET,
+    const tokenToDb =  jwt.sign({ _id }, process.env.JWT_SECRET);
+
+    const userWithTokenInDb = await User.findByIdAndUpdate(
+      _id,
+      { $set: { token: tokenToDb } },
+      {
+        new: true,
+        runValidators: true,
+      },
     );
-
-    const { subscription } = userToLogin;
+    const { subscription, token } = userWithTokenInDb;
 
     return res.json({
-      token,
+      tokenToDb,
       user: {
         email,
         subscription,
+        token,
       },
     });
   }
@@ -93,11 +111,20 @@ module.exports = class UserController {
 
   static async logoutUser(req, res) {
     const userId = req.user._id;
-    try {
-      const token = await jwt.sign({ userId }, process.env.JWT_SECRET, {
-        expiresIn: 1,
-      });
 
+    try {
+      // const token = await jwt.sign({ userId }, process.env.JWT_SECRET, {
+      //   expiresIn: 1,
+      // });
+      await User.findByIdAndUpdate(
+        userId,
+        { $set: { token: '' } },
+        {
+          new: true,
+        },
+      );
+      req.headers.authorization = 'Bearer ';
+      //   console.log(res.headers.authorization);
       return res.status(204).send();
     } catch (error) {
       return res.status(500).send(error);
@@ -121,7 +148,7 @@ module.exports = class UserController {
           runValidators: true,
         },
       );
-      
+
       const { email, subscription } = user;
 
       return res.status(200).json({ email, subscription });
@@ -134,6 +161,7 @@ module.exports = class UserController {
     const rules = Joi.object({
       email: Joi.string().email().required(),
       password: Joi.string().required(),
+      token: Joi.string(),
     });
     const result = rules.validate(req.body);
     if (result.error) {
