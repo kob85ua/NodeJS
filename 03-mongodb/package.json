@@ -1,12 +1,12 @@
 {
-  "name": "02-express",
+  "name": "03-mongodb",
   "version": "1.0.0",
-  "description": "02-express",
+  "description": "03-mongodb",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon ./api/start"
+    "dev": "nodemon ./app/start"
   },
   "nodemonConfig": {
     "ignore": [
@@ -14,18 +14,13 @@
     ]
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kob85ua/02-express.git"
+    "type": "git"
   },
   "keywords": [
-    "02-express"
+    "03-mongodb"
   ],
   "author": "M. Kobeliev",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kob85ua/02-express/issues"
-  },
-  "homepage": "https://github.com/kob85ua/02-express#readme",
   "devDependencies": {
     "nodemon": "^2.0.6"
   },
@@ -34,6 +29,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "joi": "^17.3.0",
+    "mongoose": "^5.11.13",
     "morgan": "^1.10.0"
   }
 }
